@@ -38,3 +38,5 @@ logs
 .continue
 
 src/bot.js
+
+db.sqlite
