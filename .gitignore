@@ -40,3 +40,5 @@ logs
 src/bot.js
 
 db.sqlite
+
+build

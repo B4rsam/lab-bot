@@ -9,15 +9,15 @@ const userStore: Map<number, UserData> = new Map();
 const registerStore: Map<number, UserData> = new Map();
 
 const registerAdd = db.prepare(
-  "INSERT INTO register_log(user_id, username) VALUES (@user_id, @username) RETURNING *"
+  "INSERT INTO register_log(user_id, username) VALUES (?, ?) RETURNING *"
 );
 const userAdd = db.prepare(
-  "INSERT INTO users(user_id, username) VALUES (@user_id, @username) RETURNING *"
+  "INSERT INTO users(user_id, username) VALUES (?, ?) RETURNING *"
 );
 
 const init = () => {
-  const users = db.prepare<UserData[]>(`SELECT * FROM users`);
-  const registers = db.prepare<UserData[]>(`SELECT * FROM register_log`);
+  const users = db.prepare(`SELECT * FROM users`);
+  const registers = db.prepare(`SELECT * FROM register_log`);
 
   // @ts-ignore
   users.all().forEach((item) => userStore.set(item.user_id, item));
@@ -63,13 +63,13 @@ bot.command("register", (ctx) => {
     ctx.reply("Asking Boss for access...");
     console.log(message);
 
-    registerAdd.run(ctx.message.from.id, ctx.message.from.username);
+    registerAdd.run(ctx.message.from.id, ctx.message.from.username as string);
     registerStore.set(ctx.message.from.id, {
       user_id: ctx.message.from.id,
       username: ctx.message.from.username,
     });
 
-    ctx.telegram.sendMessage(ownerChatId, message);
+    ctx.telegram.sendMessage(ownerChatId, message);``
   }
 });
 
@@ -108,7 +108,7 @@ bot.command("grant", (ctx) => {
       return;
     }
 
-    userAdd.run(data.user_id, data.username);
+    userAdd.run(data.user_id, data.username as string);
     userStore.set(data.user_id, data);
 
     ctx.reply(

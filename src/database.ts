@@ -1,11 +1,11 @@
-import Database from "better-sqlite3";
+import Database from "bun:sqlite";
 import { config } from "dotenv";
 
 config({ path: ".env" });
 
 const db = new Database("db.sqlite");
 
-db.exec(`
+db.query(`
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER UNIQUE NOT NULL,
@@ -13,7 +13,7 @@ db.exec(`
         )
     `);
 
-db.exec(`
+db.query(`
     CREATE TABLE IF NOT EXISTS register_log (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER UNIQUE NOT NULL,
@@ -28,7 +28,7 @@ if (
     )
     .all().length === 0
 ) {
-  db.exec(
+  db.query(
     `INSERT INTO users (user_id, username) VALUES (${Number(
       process.env.OWNER_ID
     )}, '${process.env.OWNER_USERNAME}')`

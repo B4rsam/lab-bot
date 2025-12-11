@@ -2,20 +2,18 @@
   "name": "lab-bot",
   "module": "index.ts",
   "scripts": {
-    "dev": "npx ts-node src/bot.ts",
-    "build": "tsc src/bot.ts"
+    "dev": "bun run src/bot.ts",
+    "build": "bun build src/bot.ts --outdir=./build --target=bun"
   },
   "type": "module",
   "private": true,
   "devDependencies": {
-    "@types/better-sqlite3": "^7.6.13",
     "@types/bun": "latest"
   },
   "peerDependencies": {
     "typescript": "^5"
   },
   "dependencies": {
-    "better-sqlite3": "^12.5.0",
     "dotenv": "^17.2.3",
     "telegraf": "^4.16.3"
   }
