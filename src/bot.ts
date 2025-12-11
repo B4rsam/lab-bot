@@ -79,5 +79,12 @@ bot.command("grant", (ctx) => {
     }
 });
 
+bot.command("list", async (ctx) => {
+    if (ctx.message.from.id === Number(process.env.OWNER_ID)) {
+        const message = await "User list:\n" + userStore.map((user, index) => "\n" + index + ". User id: " + user.id + " username: " + user.username);
+        ctx.reply(message);
+    }
+});
+
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
