@@ -8,13 +8,6 @@ config({ path: ".env" });
 const userStore: Map<number, UserData> = new Map();
 const registerStore: Map<number, UserData> = new Map();
 
-const registerAdd = db.prepare(
-  "INSERT INTO register_log(user_id, username) VALUES (?, ?) RETURNING *"
-);
-const userAdd = db.prepare(
-  "INSERT INTO users(user_id, username) VALUES (?, ?) RETURNING *"
-);
-
 const init = () => {
   const users = db.prepare(`SELECT * FROM users`);
   const registers = db.prepare(`SELECT * FROM register_log`);
@@ -26,6 +19,13 @@ const init = () => {
 
   return;
 };
+
+const registerAdd = db.prepare(
+    "INSERT INTO register_log(user_id, username) VALUES (?, ?) RETURNING *"
+);
+const userAdd = db.prepare(
+    "INSERT INTO users(user_id, username) VALUES (?, ?) RETURNING *"
+);
 
 let ownerChatId: number = NaN;
 
@@ -69,7 +69,9 @@ bot.command("register", (ctx) => {
       username: ctx.message.from.username,
     });
 
-    ctx.telegram.sendMessage(ownerChatId, message);``
+    if (!isNaN(ownerChatId)) {
+      ctx.telegram.sendMessage(ownerChatId, message);
+    }
   }
 });
 

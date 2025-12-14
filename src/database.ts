@@ -11,7 +11,7 @@ db.query(`
             user_id INTEGER UNIQUE NOT NULL,
             username TEXT
         )
-    `);
+    `).all();
 
 db.query(`
     CREATE TABLE IF NOT EXISTS register_log (
@@ -19,7 +19,7 @@ db.query(`
         user_id INTEGER UNIQUE NOT NULL,
         username TEXT
     )
-    `);
+    `).all();
 
 if (
   db
