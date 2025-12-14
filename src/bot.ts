@@ -2,6 +2,7 @@ import { Telegraf } from "telegraf";
 import { config } from "dotenv";
 import db from "./database.ts";
 import type { UserData } from "./props.ts";
+import {handleGrant, handleRegister} from "src/handlers/auth/index";
 
 config({ path: ".env" });
 
@@ -47,33 +48,7 @@ bot
     console.log(err);
   });
 
-bot.command("register", (ctx) => {
-  if (!registerStore.has(ctx.message.from.id)) {
-    if (userStore.has(ctx.message.from.id)) {
-      ctx.reply("You are already registered.");
-      return;
-    }
-
-    const message =
-      "New register from id: " +
-      ctx.message.from.id +
-      " with username: " +
-      ctx.message.from.username;
-
-    ctx.reply("Asking Boss for access...");
-    console.log(message);
-
-    registerAdd.run(ctx.message.from.id, ctx.message.from.username as string);
-    registerStore.set(ctx.message.from.id, {
-      user_id: ctx.message.from.id,
-      username: ctx.message.from.username,
-    });
-
-    if (!isNaN(ownerChatId)) {
-      ctx.telegram.sendMessage(ownerChatId, message);
-    }
-  }
-});
+bot.command("register", handleRegister);
 
 bot.command("status", (ctx) => {
   const { id } = ctx.message.from;
@@ -95,29 +70,7 @@ bot.hears("/requests", async (ctx) => {
   }
 });
 
-bot.command("grant", (ctx) => {
-  if (ctx.message.from.id === Number(process.env.OWNER_ID)) {
-    const index = ctx.payload;
-
-    if (index === undefined || isNaN(Number(index))) {
-      ctx.reply("Invalid index");
-    }
-
-    const data = registerStore.get(Number(index));
-
-    if (!data) {
-      ctx.reply("Invalid index");
-      return;
-    }
-
-    userAdd.run(data.user_id, data.username as string);
-    userStore.set(data.user_id, data);
-
-    ctx.reply(
-      "Granting access to user " + registerStore.get(Number(data.user_id))
-    );
-  }
-});
+bot.command("grant", handleGrant);
 
 bot.command("list", async (ctx) => {
   if (ctx.message.from.id === Number(process.env.OWNER_ID)) {
