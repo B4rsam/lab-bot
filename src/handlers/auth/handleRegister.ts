@@ -3,11 +3,10 @@ import dataStore from "src/store";
 
 const handleRegister = (ctx: TextMessageContext) => {
     const { id, username } = ctx.message.from;
-    const { getRegister, getUser, addRegister } = dataStore;
 
-    if (getRegister(id)) return;
+    if (dataStore.getRegister(id)) return;
 
-    if (getUser(id)) {
+    if (dataStore.getUser(id)) {
         ctx.reply("You are already registered.");
         return;
     }
@@ -17,7 +16,7 @@ const handleRegister = (ctx: TextMessageContext) => {
         return;
     }
 
-    addRegister({ id, username });
+    dataStore.addRegister({ id, username });
     ctx.reply("Asking Boss for access...");
 
     return;

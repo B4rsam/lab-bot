@@ -3,8 +3,6 @@ import { config } from "dotenv";
 import * as process from "node:process";
 import dataStore from "src/store";
 
-const { getRegister, addUser } = dataStore;
-
 config({ path: ".env" });
 
 const handleGrant = (ctx: TextMessageContext) => {
@@ -13,14 +11,15 @@ const handleGrant = (ctx: TextMessageContext) => {
     // @ts-ignore
     const index: number | undefined = ctx.payload;
 
-    if (index === undefined || !getRegister(index)) {
+    if (index === undefined || !dataStore.getRegister(index)) {
         ctx.reply("Invalid ID");
         return;
     }
 
-    const data = getRegister(index);
+    const data = dataStore.getRegister(index);
 
-    addUser(data);
+    // @ts-ignore
+    dataStore.addUser(data);
     ctx.reply("User added!");
     return;
 };
