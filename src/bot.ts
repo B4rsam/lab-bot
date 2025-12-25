@@ -4,6 +4,8 @@ import {handleGrant, handleRegister} from "src/handlers/auth/index";
 import handleStatus from "./handlers/user/handleStatus.ts";
 import { handleRequests, handleUsers } from "./handlers/user/index.ts";
 import dataStore from "./store.ts";
+import handleAction from "./handlers/docker/handleAction.ts";
+import { handleContainerStatus } from "./handlers/docker/index.ts";
 
 config({ path: ".env" });
 
@@ -30,6 +32,9 @@ bot.command("status", handleStatus);
 bot.command("request", handleRequests)
 bot.command("grant", handleGrant);
 bot.command("list", handleUsers);
+
+bot.command("container", handleAction);
+bot.command("containerState", handleContainerStatus);
 
 process.once("SIGINT", () => bot.stop("SIGINT"));
 process.once("SIGTERM", () => bot.stop("SIGTERM"));
